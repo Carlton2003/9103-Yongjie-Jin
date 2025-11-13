@@ -42,7 +42,9 @@ function modelReady() {
 
 function draw() {
   // Background image
-  background(bgImg);
+  //background(bgImg);
+  //perlin noise 2
+  drawWavyBackground(bgImg, 200, 0.02);
 
   if (isModelReady) {
     segmenter.segment(video, gotResult);
@@ -54,26 +56,8 @@ function draw() {
   
   drawStatusText();
 
-  
-  //perlin noise 1
-  let noiseOffset = 0;  // 噪声偏移量
-
-function applyPerlinDistortion(strength = 20, detail = 0.02) {
-  loadPixels();
-  // 对每一行像素进行水平抖动
-  for (let y = 0; y < height; y++) {
-    let n = noise(y * detail, noiseOffset) * strength; // 计算当前行的偏移量
-    let line = get(0, y, width, 1); // 取出这一行
-    image(line, n - strength / 2, y); // 绘制到新的位置，造成“波动感”
-  }
-  noiseOffset += 0.01; // 慢慢流动
-}
-
-  
 applyPixelation(10);
 
-//perlin noise 1
-applyPerlinDistortion(30, 0.015);
 
 }
 
@@ -111,4 +95,25 @@ function drawStatusText() {
   textSize(80);
   textAlign(CENTER, CENTER);
   text("I forgot ddl", width / 2, height * 1 / 4);
+}
+
+//perlin noise 2
+let yoff = 0; // 噪声随时间推进
+
+function drawWavyBackground(img, waveStrength = 15, noiseScale = 0.02) {
+  // 在一个离屏画布中绘制扭曲后的背景
+  let pg = createGraphics(width, height);
+  pg.loadPixels();
+  img.loadPixels();
+
+  for (let y = 0; y < height; y++) {
+    // 使用 Perlin noise 计算这一行的水平偏移量
+    let xOffset = noise(y * noiseScale, yoff) * waveStrength - waveStrength / 2;
+    // 把原背景的这一行取出并在偏移后绘制
+    let row = img.get(0, y, width, 1);
+    pg.image(row, xOffset, y);
+  }
+
+  yoff += 0.01; // 时间偏移（动画推进）
+  image(pg, 0, 0, width, height); // 绘制最终扭曲背景
 }
