@@ -10,18 +10,18 @@ function preload() {
 }
 
 function setup() {
-  // Create canvas
+  //Canvas Creation
   createCanvas(480, 600);
-  // Create save button
+  //Button creation
   let saveBtn = createButton('💾 Save your scream');
-  saveBtn.position(10, 10); // Position
+  saveBtn.position(10, 10);//位置
   saveBtn.mousePressed(saveSnapshot);
   
-  // Video settings
+  //Video parameters
   let constraints = {
     video: {
-      width: 100,    // Width
-      height: 100    // Height
+      width: 100,    // width
+      height: 100    // height
     },
     audio: false
   };
@@ -30,53 +30,60 @@ function setup() {
   video.size(100, 100);
   video.hide();
 
-  // Load UNet real-time person segmentation model
+  //Loading the UNet real-time human segmentation model
   segmenter = ml5.uNet('person', modelReady);
 }
-
-// Model callback
+//Model call
 function modelReady() {
   console.log('✅ Model loaded!');
   isModelReady = true;
 }
 
 function draw() {
-  // Background image
+  //背景图片
   //background(bgImg);
-  //perlin noise 3
-  let dynamicStrength = 30 + sin(frameCount * 0.02) * 15;
-  drawWavyBackground(bgImg, dynamicStrength, 0.02);
+
+  //perlin noise 4
+  // 动态波动强度：随时间上下律动
+let dynamicStrength = 80 + sin(frameCount * 0.05) * 40;
+// 噪声流动速度（y方向更快一点，像瀑布）
+let dynamicSpeed = 0.02 + abs(sin(frameCount * 0.01)) * 0.03;
+
+
+// 调用扭曲函数
+drawWavyBackground(bgImg, dynamicStrength, dynamicSpeed);
+
 
   if (isModelReady) {
     segmenter.segment(video, gotResult);
   }
 
   if (segmentation) {
+
     image(segmentation.backgroundMask, 50, 200, 400, 400);
   }
   
   drawStatusText();
 
-applyPixelation(10);
+  applyPixelation(10);
 
-
+  
 }
 
 function applyPixelation(pixelSize) {
-  // Create a smaller temporary canvas
+  // 创建一个更小的临时画布
   let smallGraphics = createGraphics(width / pixelSize, height / pixelSize);
   smallGraphics.noSmooth();
 
-  // Draw the current frame onto the smaller canvas
+  // 将当前画面缩小绘制到小画布中
   smallGraphics.image(get(), 0, 0, smallGraphics.width, smallGraphics.height);
 
-  // Then scale it back up to create the pixelation effect
+  // 再把它放大回原尺寸形成像素风
   noSmooth();
   image(smallGraphics, 0, 0, width, height);
   smooth();
 }
-
-// Do not modify this section
+//不要改动这一块
 function gotResult(err, result) {
   if (err) {
     console.error(err);
@@ -84,38 +91,41 @@ function gotResult(err, result) {
   }
   segmentation = result;
 }
-
-// Screenshot function
+//截屏功能
 function saveSnapshot() {
   saveCanvas('myCanvas', 'png');
 }
-
-// "I forget ddl" text style
+//I forget ddl 字体样式
 function drawStatusText() {
   fill(255);
   textSize(80);
   textAlign(CENTER, CENTER);
-  text("I forgot ddl", width / 2, height * 1 / 4);
+  text("I forgot ddl", width / 2, height*1 / 4);
+
 }
 
-//perlin noise 3
-// 🌀 Perlin Noise 垂直流动背景（瀑布效果）
+//perlin noise 4
 let yoff = 0; // 时间偏移量
 
 function drawWavyBackground(img, waveStrength = 20, noiseScale = 0.02) {
   let pg = createGraphics(width, height);
-  pg.loadPixels();
   img.loadPixels();
 
   for (let x = 0; x < width; x++) {
-    // 使用 Perlin noise 计算每一列的垂直偏移量
-    let yOffset = noise(x * noiseScale, yoff) * waveStrength - waveStrength / 2;
-    // 获取原图中这一列的像素
+    // Perlin noise 生成每一列的竖直偏移量
+    let n = noise(x * noiseScale, yoff);
+    // 波动幅度随时间周期性变化，增加节奏感
+    let dynamicWave = waveStrength + sin(frameCount * 0.05 + x * 0.1) * (waveStrength / 2);
+    let yOffset = map(n, 0, 1, -dynamicWave, dynamicWave);
+
+    // 获取该列像素
     let col = img.get(x, 0, 1, height);
-    // 把整列稍微上下偏移，形成竖直流动感
+    // 将整列在竖直方向偏移
     pg.image(col, x, yOffset);
   }
 
-  yoff += 0.01; // 时间推进，形成动态流动
+  // 时间偏移量推进，形成动态动画
+  yoff += 0.01;
+
   image(pg, 0, 0, width, height);
 }
