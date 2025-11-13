@@ -16,31 +16,26 @@ Master of Interaction Design & Electronic Arts – The University of Sydney (USY
 ### Group Project
 
 The group project visualises the overwhelming stress of students buried in endless assignments.
- By combining Munch’s *The Scream* with a live video feed, the user becomes the central figure — overwhelmed, pixelated, and blended into the chaos of the artwork.
- The humorous text **“I forgot ddl”** emphasises this emotional breakdown and injects irony into the classic painting.
+By combining Munch’s *The Scream* with a live video feed, the user becomes the central figure — overwhelmed, pixelated, and blended into the chaos of the artwork.
+The humorous text **“I forgot ddl”** emphasises this emotional breakdown and injects irony into the classic painting.
 
 ------
 
 ### Individual Project
 
 This individual work extends the group project by introducing **Perlin noise** and **randomness** as the primary drivers of animation.
- Instead of focusing on user interaction or time-based control, this version gives the painting a self-generated, organic sense of distortion.
+Instead of focusing on user interaction or time-based control, this version gives the painting a self-generated, organic sense of distortion.
 
 Each column of *The Scream* background is displaced vertically according to Perlin noise values, while subtle random offsets ensure the flow is never perfectly repetitive.
- The result is a continuous, living background that feels unstable and emotionally charged — reflecting the student’s inner chaos before a deadline.
+The result is a continuous, living background that feels unstable and emotionally charged — reflecting the student’s inner chaos before a deadline.
 
 ------
 
 ## 🕹️ How to Run & Interact
 
 1. Host the project on a **local server** (needed for camera access).
-    Example:
 
-   ```
-   python -m http.server
-   ```
-
-2. Open the webpage in Chrome or Firefox and **allow camera access**.
+2. Open the webpage in Chrome and **allow camera access**.
 
 3. The animation starts automatically:
 
@@ -111,12 +106,16 @@ This version requires **no manual input** — it runs autonomously, driven purel
 
 **Visual inspiration:**
 
-- Edvard Munch (1893). *The Scream*. The National Gallery, Oslo.
-- Ken Perlin (1985). *Perlin Noise: A Gradient Noise Function* — a generative method widely used in computer graphics for natural-looking motion.
-- p5.js Documentation: [p5js.org/reference/#/p5/noise](https://p5js.org/reference/#/p5/noise)
+- Edvard Munch (1893). *The Scream*. The National Gallery, Oslo. https://www.nasjonalmuseet.no/en/collection/object/NG.M.00939
+- Ken Perlin (1985). *Perlin Noise: A Gradient Noise Function* — a generative method widely used in computer graphics for natural-looking motion. https://en.wikipedia.org/wiki/Perlin_noise
+- From Pinterest
+  - https://www.pinterest.com/pin/68749240568/
+  - https://www.pinterest.com/pin/10485011644351547/
+  - https://www.pinterest.com/pin/1002402829572557576/
+
 
 **Conceptual inspiration:**
- Inspired by how Perlin noise creates organic, non-repetitive motion. I imagined the background of *The Scream* as if it were vibrating from anxiety — an emotion that doesn’t follow perfect rhythm, but rather fluctuates unpredictably.
+Inspired by how Perlin noise creates organic, non-repetitive motion. I imagined the background of *The Scream* as if it were vibrating from anxiety — an emotion that doesn’t follow perfect rhythm, but rather fluctuates unpredictably.
 
 ------
 
@@ -125,12 +124,3 @@ This version requires **no manual input** — it runs autonomously, driven purel
 - The randomness ensures that each run produces a slightly different animation — no two “screams” are exactly alike.
 - This version emphasises **emotional instability** through continuous but irregular deformation.
 - The absence of time-based rhythm (e.g. sine wave modulation) differentiates it from other team members’ work and keeps focus on natural noise-driven flow.
-
-------
-
-### ✅ Summary
-
-**Driver:** Perlin Noise + Randomness
-**Animation focus:** Organic self-distortion of *The Scream* background
-**Interaction:** None (autonomous generative motion)
-**Distinct feature:** Unpredictable, self-evolving motion field instead of time-based rhythm
