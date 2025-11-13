@@ -43,8 +43,9 @@ function modelReady() {
 function draw() {
   // Background image
   //background(bgImg);
-  //perlin noise 2
-  drawWavyBackground(bgImg, 200, 0.02);
+  //perlin noise 3
+  let dynamicStrength = 30 + sin(frameCount * 0.02) * 15;
+  drawWavyBackground(bgImg, dynamicStrength, 0.02);
 
   if (isModelReady) {
     segmenter.segment(video, gotResult);
@@ -97,23 +98,24 @@ function drawStatusText() {
   text("I forgot ddl", width / 2, height * 1 / 4);
 }
 
-//perlin noise 2
-let yoff = 0; // 噪声随时间推进
+//perlin noise 3
+// 🌀 Perlin Noise 垂直流动背景（瀑布效果）
+let yoff = 0; // 时间偏移量
 
-function drawWavyBackground(img, waveStrength = 15, noiseScale = 0.02) {
-  // 在一个离屏画布中绘制扭曲后的背景
+function drawWavyBackground(img, waveStrength = 20, noiseScale = 0.02) {
   let pg = createGraphics(width, height);
   pg.loadPixels();
   img.loadPixels();
 
-  for (let y = 0; y < height; y++) {
-    // 使用 Perlin noise 计算这一行的水平偏移量
-    let xOffset = noise(y * noiseScale, yoff) * waveStrength - waveStrength / 2;
-    // 把原背景的这一行取出并在偏移后绘制
-    let row = img.get(0, y, width, 1);
-    pg.image(row, xOffset, y);
+  for (let x = 0; x < width; x++) {
+    // 使用 Perlin noise 计算每一列的垂直偏移量
+    let yOffset = noise(x * noiseScale, yoff) * waveStrength - waveStrength / 2;
+    // 获取原图中这一列的像素
+    let col = img.get(x, 0, 1, height);
+    // 把整列稍微上下偏移，形成竖直流动感
+    pg.image(col, x, yOffset);
   }
 
-  yoff += 0.01; // 时间偏移（动画推进）
-  image(pg, 0, 0, width, height); // 绘制最终扭曲背景
+  yoff += 0.01; // 时间推进，形成动态流动
+  image(pg, 0, 0, width, height);
 }
