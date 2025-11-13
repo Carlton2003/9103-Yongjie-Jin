@@ -14,7 +14,7 @@ function setup() {
   createCanvas(480, 600);
   //Button creation
   let saveBtn = createButton('💾 Save your scream');
-  saveBtn.position(10, 10);//位置
+  saveBtn.position(10, 10);//Location
   saveBtn.mousePressed(saveSnapshot);
   
   //Video parameters
@@ -40,17 +40,17 @@ function modelReady() {
 }
 
 function draw() {
-  //背景图片
+  //background
   //background(bgImg);
 
   //perlin noise 4
-  // 动态波动强度：随时间上下律动
+//Dynamic fluctuation intensity: fluctuates up and down over time
 let dynamicStrength = 80 + sin(frameCount * 0.05) * 40;
-// 噪声流动速度（y方向更快一点，像瀑布）
+//Noise flow velocity (faster in the y-direction, like a waterfall)
 let dynamicSpeed = 0.02 + abs(sin(frameCount * 0.01)) * 0.03;
 
 
-// 调用扭曲函数
+//Call the twist function
 drawWavyBackground(bgImg, dynamicStrength, dynamicSpeed);
 
 
@@ -71,19 +71,19 @@ drawWavyBackground(bgImg, dynamicStrength, dynamicSpeed);
 }
 
 function applyPixelation(pixelSize) {
-  // 创建一个更小的临时画布
+  //Create a smaller temporary canvas
   let smallGraphics = createGraphics(width / pixelSize, height / pixelSize);
   smallGraphics.noSmooth();
 
-  // 将当前画面缩小绘制到小画布中
+  //Shrink the current image and draw it onto a smaller canvas.
   smallGraphics.image(get(), 0, 0, smallGraphics.width, smallGraphics.height);
 
-  // 再把它放大回原尺寸形成像素风
+  //Then enlarge it back to its original size to create a pixelated style.
   noSmooth();
   image(smallGraphics, 0, 0, width, height);
   smooth();
 }
-//不要改动这一块
+//Don't move!(Group code)
 function gotResult(err, result) {
   if (err) {
     console.error(err);
@@ -91,11 +91,11 @@ function gotResult(err, result) {
   }
   segmentation = result;
 }
-//截屏功能
+//Screenshoot
 function saveSnapshot() {
   saveCanvas('myCanvas', 'png');
 }
-//I forget ddl 字体样式
+//"I forget ddl"words
 function drawStatusText() {
   fill(255);
   textSize(80);
@@ -105,26 +105,31 @@ function drawStatusText() {
 }
 
 //perlin noise 4
-let yoff = 0; // 时间偏移量
+
+//Time offset
+let yoff = 0; 
 
 function drawWavyBackground(img, waveStrength = 20, noiseScale = 0.02) {
   let pg = createGraphics(width, height);
   img.loadPixels();
 
   for (let x = 0; x < width; x++) {
-    // Perlin noise 生成每一列的竖直偏移量
+    
+    //Perlin noise Generate the vertical offset for each column.
     let n = noise(x * noiseScale, yoff);
-    // 波动幅度随时间周期性变化，增加节奏感
+    
+    //The fluctuation amplitude changes periodically over time, increasing the sense of rhythm.
     let dynamicWave = waveStrength + sin(frameCount * 0.05 + x * 0.1) * (waveStrength / 2);
     let yOffset = map(n, 0, 1, -dynamicWave, dynamicWave);
 
-    // 获取该列像素
+    //Get the pixels of this column
     let col = img.get(x, 0, 1, height);
-    // 将整列在竖直方向偏移
+    
+    //Shift the entire column vertically.
     pg.image(col, x, yOffset);
   }
 
-  // 时间偏移量推进，形成动态动画
+  //The time offset advances, creating a dynamic animation.
   yoff += 0.01;
 
   image(pg, 0, 0, width, height);
